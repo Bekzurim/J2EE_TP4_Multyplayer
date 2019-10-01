@@ -11,9 +11,9 @@ package bowling;
  */
 public class MultiPlayersGame implements MultiPlayerGame {
     
-        String[] joueur;
+        String[] joueurs;
         SinglePlayerGame[] partie;
-        
+        int joueur;
     
 	/**
 	 * Démarre une nouvelle partie pour un groupe de joueurs
@@ -28,7 +28,7 @@ public class MultiPlayersGame implements MultiPlayerGame {
                 partie[i]=new SinglePlayerGame();
         }
             
-            return "Prochain tir : joueur "+joueur[0]+", tour n° 1, boule n° 1";
+            return "Prochain tir : joueur "+joueurs[0]+", tour n° 1, boule n° 1";
         }
 	
 	/**
@@ -40,7 +40,19 @@ public class MultiPlayersGame implements MultiPlayerGame {
 	 * @throws java.lang.Exception si la partie n'est pas démarrée.
 	 */
 	public String lancer(int nombreDeQuillesAbattues){
-            return "";
+            partie[joueur].lancer(nombreDeQuillesAbattues);
+            if(partie[joueur].hasCompletedFrame()){
+                if(joueur<joueurs.length-1){
+                    joueur+=1;
+                }
+                else{
+                    joueur=0;
+                }
+                return "Prochain tir : joueur "+joueurs[joueur]+", tour n°"+partie[joueur].getFrameNumber()+", boule n° 1";
+            }
+            else{
+                return "Prochain tir : joueur "+joueurs[joueur]+", tour n°"+partie[joueur].getFrameNumber()+", boule n° "+partie[joueur].getNextBallNumber();
+                }
         }
 	
 	/**
@@ -50,6 +62,12 @@ public class MultiPlayersGame implements MultiPlayerGame {
 	 * @throws Exception si le playerName ne joue pas dans cette partie
 	 */
 	public int scoreFor(String playerName){
-            return 0;
+            int name = 0;
+            for(int i=0;i<joueurs.length;i++){
+                if(joueurs[i]==playerName){
+                    name=i;
+                }
+            }
+            return partie[name].score();
         }
 }
